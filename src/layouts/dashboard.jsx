@@ -34,33 +34,6 @@ export function Dashboard() {
           sidenavType === "dark" ? "/img/logo-ct.png" : "/img/logo-ct-dark.png"
         }
         />
-      <div className="p-4 xl:ml-80">
-        {/* <DashboardNavbar />
-        <Configurator />
-        <IconButton
-          size="lg"
-          color="grey"
-          className="fixed bottom-8 right-8 z-40 rounded-full shadow-blue-gray-900/10"
-          ripple={false}
-          onClick={() => setOpenConfigurator(dispatch, true)}
-        >
-          <Cog6ToothIcon className="h-5 w-5" />
-        </IconButton>
-        {loading ? (
-              <LoadingCard />
-              
-            ) : (
-        <Routes>
-          {routes.map(
-            ({ layout, pages }) =>
-              layout === "dashboard" &&
-              pages.map(({ path, element }) => (
-                <Route exact path={path} element={element} />
-              ))
-          )}
-        </Routes>
-         )} */}
-      </div>
     </div>
   )
 }
