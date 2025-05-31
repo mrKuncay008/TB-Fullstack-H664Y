@@ -7,14 +7,18 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-# Ignore node_modules and backend/vendor
+# Ignore node_modules in root and frontend, and vendor in backend
 node_modules/
+frontend/node_modules/
 backend/vendor/
 
 package-lock.json
 dist
 dist-ssr
 *.local
+
+# Ignore environment files in backend
+backend/.env
 
 # Editor directories and files
 .vscode/*
