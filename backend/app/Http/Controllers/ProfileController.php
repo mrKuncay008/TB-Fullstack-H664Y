@@ -26,12 +26,24 @@ class ProfileController extends Controller
     /**
      * Display the specified resource.
      */
-    public function getUser($id)
+    public function getUser()
     {
+        // Mengambil 'user_id' dari session
+        $id = session()->get('user_id');
+        dd($id);
+        if (!$id) {
+            return response()->json([
+                'success' => false,
+                'message' => 'ID pengguna tidak ditemukan dalam session.',
+            ], 400);
+        }
+
+        // Mencari pengguna berdasarkan ID
         $user = User::find($id);
+
         if ($user) {
             $user->created_at_formatted = $user->created_at->format('Y-m-d H:i:s');
-            
+
             return response()->json([
                 'success' => true,
                 'message' => 'Detail akun berhasil diambil.',
@@ -44,6 +56,7 @@ class ProfileController extends Controller
             ], 404);
         }
     }
+
 
     /**
      * Update the specified resource in storage.

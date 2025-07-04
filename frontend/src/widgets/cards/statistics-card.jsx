@@ -7,10 +7,10 @@ import {
 } from "@material-tailwind/react";
 import PropTypes from "prop-types";
 
-export function StatisticsCard({ color, icon, title, value, footer }) {
+export function StatisticsCard({ colorBody ,color, icon, title, value, footer }) {
   return (
-    <div>
-      <Card className="w-72 border-blue-gray-100 shadow-sm">
+    <div >
+      <Card className="w-72 border-blue-gray-100 shadow-sm" color={colorBody}>
         <CardHeader
           variant="gradient"
           color={color}
@@ -21,15 +21,15 @@ export function StatisticsCard({ color, icon, title, value, footer }) {
         {icon}
       </CardHeader>
       <CardBody className="p-4 text-right">
-        <Typography variant="small" className="font-normal text-blue-gray-600">
+        <Typography variant="small" className="font-normal text-white-600">
           {title}
         </Typography>
-        <Typography variant="h4" color="blue-gray">
+        <Typography variant="h4" color="blue-gray text-white-600">
           {value}
         </Typography>
       </CardBody>
       {footer && (
-        <CardFooter className="border-t border-blue-gray-50 p-4">
+        <CardFooter className="border-t border-blue-gray-50 p-4 text-white-600">
           {footer}
         </CardFooter>
       )}
@@ -45,6 +45,28 @@ StatisticsCard.defaultProps = {
 
 StatisticsCard.propTypes = {
   color: PropTypes.oneOf([
+    "white",
+    "blue-gray",
+    "gray",
+    "brown",
+    "deep-orange",
+    "orange",
+    "amber",
+    "yellow",
+    "lime",
+    "light-green",
+    "green",
+    "teal",
+    "cyan",
+    "light-blue",
+    "blue",
+    "indigo",
+    "deep-purple",
+    "purple",
+    "pink",
+    "red",
+  ]),
+  colorBody: PropTypes.oneOf([
     "white",
     "blue-gray",
     "gray",

@@ -17,52 +17,43 @@ import toast from "react-hot-toast";
 
 const createSchema = z.object({
   name: z.string().min(1, "Nama wajib di isi").max(255, "Name must not exceed 255 characters"),
-  total: z.preprocess((val) => Number(val), z.number().min(1, "Nomer wajib di isi")),
+  total: z.string().min(1, "Total wajib di isi"),
   date_colmn: z.string().refine((value) => !isNaN(Date.parse(value)), {
-    message: "Date wajib di isi",
+    message: "Tanggal wajib di isi",
   }),
 });
 
 
 export function DialogEditOutcome({ open, onClose, selectedId, refreshOutcomeData }) {
-    const form = useForm({
-      defaultValues: {
-        name: "",
-        total: "",
-        date_colmn: "",
-      },
-      resolver: zodResolver(createSchema),
-    });
+  const form = useForm({
+    defaultValues: {
+      name: "",
+      total: "", // Nilai default sebagai string kosong
+      date_colmn: "",
+    },
+    resolver: zodResolver(createSchema),
+  });
+  
   
     const { control, handleSubmit, formState: { errors } } = form;
   
     const handleUpdate = async (data) => {
-        try {
-          const updatedData = {
-            ...data,
-            total: data.total.toString(),
+      try {
+        const response = await axiosApi.put(`/api/outcome/${selectedId}`, data);
+        if (response.status === 200) {
+          toast.success("Data Edit successfully!", { duration: 3000 });
+          form.reset();
+          onClose();
+          if (refreshOutcomeData) {
+            refreshOutcomeData();
           }
-
-          const response = await axiosApi.put(`/api/outcome/${selectedId}`, updatedData);
-          if (response.status === 200) {
-            toast.success("Data Edit successfully!",{
-              duration:3000
-            });
-
-            form.reset();
-            onClose();
-
-            if (refreshOutcomeData){
-              refreshOutcomeData();
-            }
-          }
-        } catch (error) {
-          console.error("Error saat mengupdate data:", error);
-          toast.error("An unexpected error occurred.",{
-            duration:4000
-          });
         }
+      } catch (error) {
+        console.error("Error saat mengupdate data:", error);
+        toast.error("An unexpected error occurred.", { duration: 4000 });
+      }
     };
+    
       
   
     const fetchData = async () => {
@@ -72,7 +63,7 @@ export function DialogEditOutcome({ open, onClose, selectedId, refreshOutcomeDat
           const outcomeData = response.data.data; 
       
           form.setValue("name", outcomeData.name || "");
-          form.setValue("total", outcomeData.total || "");
+          form.setValue("total", outcomeData.total ? String(outcomeData.total): "");
           form.setValue("date_colmn", outcomeData.date_colmn || "");
         } catch (error) {
           console.error("Error saat mengambil data:", error);
@@ -146,42 +137,39 @@ export function DialogEditOutcome({ open, onClose, selectedId, refreshOutcomeDat
                 Total
               </Typography>
               <Controller
-            name="total"
-            control={control}
-            render={({ field }) => (
-                <div>
-                <Input
-                    {...field}
-                    label="Total"
-                    size="lg"
-                    type="text"
-                    onKeyDown={(e) => {
-                    if (
-                        e.key === "e" ||
-                        e.key === "E" ||
-                        e.key === "+" ||
-                        e.key === "-" ||
-                        (isNaN(Number(e.key)) && e.key !== "Backspace")
-                    ) {
-                        e.preventDefault();
-                    }
-                    }}
-                    onInput={(e) => {
-                      let rawValue = e.target.value.replace(/[^0-9]/g, "");
-                      e.target.value = rawValue.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-                      field.onChange(rawValue); // Tetap string
-                    }}                    
-                    value={(field.value || "").toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")}
-                />
-                {errors.total && (
-                    <p className="text-red-500 text-xs mt-1">
-                    {errors.total.message}
-                    </p>
+                name="total"
+                control={control}
+                render={({ field }) => (
+                  <div>
+                    <Input
+                      {...field}
+                      label="Total"
+                      size="lg"
+                      type="text"
+                      onKeyDown={(e) => {
+                        if (
+                          e.key === "e" ||
+                          e.key === "E" ||
+                          e.key === "+" ||
+                          e.key === "-" ||
+                          (isNaN(Number(e.key)) && e.key !== "Backspace")
+                        ) {
+                          e.preventDefault();
+                        }
+                      }}
+                      onInput={(e) => {
+                        let rawValue = (e.target.value || "").replace(/[^0-9]/g, "");
+                        e.target.value = rawValue.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+                        field.onChange(e.target.value); // Tetap string dengan format titik
+                      }}
+                      value={String(field.value || "").replace(/\B(?=(\d{3})+(?!\d))/g, ".")}
+                    />
+                    {errors.total && (
+                      <p className="text-red-500 text-xs mt-1">{errors.total.message}</p>
+                    )}
+                  </div>
                 )}
-                </div>
-            )}
-            />
-
+              />
             </CardBody>
             <CardFooter className="pt-0">
               <Button type="submit" variant="gradient" fullWidth>

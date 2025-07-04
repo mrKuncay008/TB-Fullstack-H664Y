@@ -1,5 +1,5 @@
 # Project-Fullstack
-
+- Dummy Account: user.admin@gmail.com pw: admin12345
 ## FE > ReactJS
 - npm install
 - npm run dev

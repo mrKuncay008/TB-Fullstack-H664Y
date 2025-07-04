@@ -72,7 +72,6 @@ const handleCloseModalEdit = () => {
       duration: 4000
     });
     try {
-      console.log('id', id);
         await promise;
         fetchOutcomeData();
 

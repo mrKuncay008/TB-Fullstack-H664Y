@@ -16,7 +16,7 @@ import toast from "react-hot-toast";
 
 const createSchema = z.object({
   name: z.string().min(1, "Nama wajib di isi").max(255, "Name must not exceed 255 characters"),
-  total: z.preprocess((val) => Number(val), z.number().min(1, "Nomer wajib di isi")),
+  total: z.string().min(1, "Total wajib di isi"), // Tetap string dan hanya validasi minimal karakter
   date_colmn: z.string().refine((value) => !isNaN(Date.parse(value)), {
     message: "Date wajib di isi",
   }),
@@ -65,12 +65,11 @@ export function DialogEditIncome({ open, onClose, selectedId, refreshIncomeData 
         if (!selectedId) return; 
         try {
           const response = await axiosApi.get(`/api/income/${selectedId}`);
-          const outcomeData = response.data.data; 
-          console.log(outcomeData);
+          const incomeData = response.data.data; 
       
-          form.setValue("name", outcomeData.name || "");
-          form.setValue("total", outcomeData.total || "");
-          form.setValue("date_colmn", outcomeData.date_colmn || "");
+          form.setValue("name", incomeData.name || "");
+          form.setValue("total", incomeData.total ? String(incomeData.total): "");
+          form.setValue("date_colmn", incomeData.date_colmn || "");
         } catch (error) {
           console.error("Error saat mengambil data:", error);
           alert(`Error: ${error.response?.data?.message || "Terjadi kesalahan"}`);
@@ -143,40 +142,40 @@ export function DialogEditIncome({ open, onClose, selectedId, refreshIncomeData 
                 Total
               </Typography>
               <Controller
-            name="total"
-            control={control}
-            render={({ field }) => (
+              name="total"
+              control={control}
+              render={({ field }) => (
                 <div>
-                <Input
+                  <Input
                     {...field}
                     label="Total"
                     size="lg"
                     type="text"
                     onKeyDown={(e) => {
-                    if (
+                      if (
                         e.key === "e" ||
                         e.key === "E" ||
                         e.key === "+" ||
-                        e.key === "-" ||
-                        (isNaN(Number(e.key)) && e.key !== "Backspace")
-                    ) {
+                        e.key === "-"
+                      ) {
                         e.preventDefault();
-                    }
+                      }
                     }}
-                    onInput={(e) => {
-                      let rawValue = e.target.value.replace(/[^0-9]/g, "");
-                      e.target.value = rawValue.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-                      field.onChange(rawValue); // Tetap string
-                    }}   
-                    value={(field.value || "").toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")}
-                />
-                {errors.total && (
-                    <p className="text-red-500 text-xs mt-1">
-                    {errors.total.message}
-                    </p>
-                )}
+                    value={
+                      typeof field.value === "string" || typeof field.value === "number"
+                        ? String(field.value).replace(/\B(?=(\d{3})+(?!\d))/g, ".") // Pastikan menjadi string
+                        : ""
+                    }
+                    onChange={(e) => {
+                      const rawValue = e.target.value.replace(/\./g, ""); // Hapus titik untuk nilai asli
+                      field.onChange(rawValue); // Simpan nilai asli tanpa titik
+                    }}
+                  />
+                  {errors.total && (
+                    <p className="text-red-500 text-xs mt-1">{errors.total.message}</p>
+                  )}
                 </div>
-            )}
+              )}
             />
 
             </CardBody>

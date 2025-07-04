@@ -38,21 +38,23 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $credentials = $request->only('email', 'password');
-
+    
         if (!Auth::attempt($credentials)) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
+    
         /** @var \App\Models\User $user **/
         $user = Auth::user();
         $token = $user->createToken('auth_token')->plainTextToken;
-                
+    
+        // Menyimpan ID pengguna ke dalam session
+        session()->put('user_id', $user->id);
+    
         return response()->json([
             'message' => 'Login successful',
             'access_token' => $token,
             'token_type' => 'Bearer',
             'user' => $user,
         ], 200);
-}
-
-
+    }    
 }

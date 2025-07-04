@@ -11,12 +11,13 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::get('/trans', [IncomeOutController::class, 'index']);
+
+Route::get('/get-years', [IncomeOutController::class, 'getYears']);
 Route::get('/export-excel', [IncomeOutController::class, 'exportExcel']);
-
-
 
 Route::get('/income', [IncomeOutController::class, 'getIncome']);
 //Api Income Untuk menambahkan data
@@ -45,4 +46,7 @@ Route::delete('/outcome/{id}', [IncomeOutController::class, 'destroyOutcome']);
 //api untuk dashboard
 Route::get('/dashboard', [DashboardController::class, 'getSummary']);
 
-Route::get('/data/{id}', [ProfileController::class, 'getUser']);
+Route::get('/data/user', [ProfileController::class, 'getUser']);
+
+
+Route::post('/tanya_ai/get_datatable', [IncomeOutController::class, 'handleChat'])->name('tanya_ai.handleChat');

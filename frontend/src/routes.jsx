@@ -1,18 +1,18 @@
 import {
   HomeIcon,
-  UserCircleIcon,
   TableCellsIcon,
   ArrowsPointingOutIcon,
   ServerStackIcon,
   RectangleStackIcon,
   ArrowLeftOnRectangleIcon,
   BookOpenIcon,
+  ChatBubbleLeftIcon,
 } from "@heroicons/react/24/solid";
-import { Home, Profile, Income } from "@/pages/dashboard";
+import { Home, Income } from "@/pages/dashboard";
 import { SignIn, SignUp } from "@/pages/auth";
 import Outcome from "./pages/dashboard/outcome";
-import Bembukuan from "./pages/dashboard/pembukuan";
 import Pembukuan from "./pages/dashboard/pembukuan";
+import Tanyaai from "./pages/dashboard/tanyaai";
 
 const icon = {
   className: "w-5 h-5 text-inherit",
@@ -30,13 +30,13 @@ export const routes = [
       },
       {
         icon: <TableCellsIcon {...icon} />,
-        name: "Submit InCome",
+        name: "Anggaran Masuk",
         path: "/income",
         element: <Income />,
       },
       {
         icon: <ArrowsPointingOutIcon {...icon} />,
-        name: "Submit OutCome",
+        name: "Anggaran Keluar",
         path: "/outcome",
         element: <Outcome />,
       },
@@ -45,6 +45,12 @@ export const routes = [
         name: "Pembukuan",
         path: "/pembukuan",
         element: <Pembukuan />,
+      },
+      {
+        icon: <ChatBubbleLeftIcon {...icon} />,
+        name: "Tanya Ai",
+        path: "/tanya-ai",
+        element: <Tanyaai />,
       },
     ],
   },
@@ -57,12 +63,6 @@ export const routes = [
         name: "sign in",
         path: "/sign-in",
         element: <SignIn />,
-      },
-      {
-        icon: <UserCircleIcon {...icon} />,
-        name: "profile",
-        path: "/profile",
-        element: <Profile />,
       },
 
       {

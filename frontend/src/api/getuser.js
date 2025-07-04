@@ -3,7 +3,6 @@ import axiosApi from "@/lib/axios";
 export const apiFetchUser = async () => {
     try {
       const token = localStorage.getItem('access_token');
-      console.log("Token", token)
       
       if (!token) {
         throw new Error('Token tidak ditemukan');
